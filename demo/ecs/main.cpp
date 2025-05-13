@@ -1,11 +1,11 @@
 #include <compute/compute.hpp>
 
-#include ".gen/position.hpp"
-#include ".gen/velocity.hpp"
-#include ".gen/speed.hpp"
-
 #include <iostream>
 
+// generated dir is in included dirs
+#include "position.hpp"
+#include "velocity.hpp"
+#include "speed.hpp"
 
 void print(const position& pos)
 {
