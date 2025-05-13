@@ -1,0 +1,2 @@
+add_subdirectory(componentc)
+add_subdirectory(systemc)

@@ -1,0 +1,8 @@
+{
+  "name": "velocity",
+  "fields": {
+    "dx": "float",
+    "dy": "float",
+    "dz": "float"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "position",
+  "fields": {
+    "x": "float",
+    "y": "float",
+    "z": "float"
+  }
+}
