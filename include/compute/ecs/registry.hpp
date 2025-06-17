@@ -22,9 +22,6 @@ struct registry {
     }
 
     template <typename component_t>
-    void add_shared_components(const shared_buffer& buf, const std::vector<entity>& es = {});
-
-    template <typename component_t>
     void add_component(entity e, const component_t& value)
     {
         auto& entity_map = _entity_component_map[std::type_index(typeid(component_t))];

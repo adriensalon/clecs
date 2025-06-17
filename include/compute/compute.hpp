@@ -7,7 +7,3 @@
 
 #include <compute/ecs/entity.hpp>
 #include <compute/ecs/registry.hpp>
-
-#include <compute/sharing/directx.hpp>
-#include <compute/sharing/opengl.hpp>
-#include <compute/sharing/vulkan.hpp>

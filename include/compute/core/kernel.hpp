@@ -2,7 +2,6 @@
 
 #include <compute/core/buffer.hpp>
 #include <compute/core/context.hpp>
-#include <compute/sharing/shared_buffer.hpp>
 
 #include <string>
 
@@ -22,8 +21,6 @@ struct kernel {
     /// @param code
     kernel(const context& ctx, const std::string& str, const std::string& name);
 
-    // + FROM SHARED CTX !
-
     template <typename value_t>
     void set_arg(const std::size_t idx, buffer<value_t>& buf)
     {
@@ -40,11 +37,6 @@ struct kernel {
         if (err != CL_SUCCESS) {
             throw std::runtime_error("Failed to set array_buffer kernel argument at index " + std::to_string(idx));
         }
-    }
-
-    void set_arg(const std::size_t idx, shared_buffer& buf)
-    {
-        // todo
     }
 
     /// @brief
