@@ -33,48 +33,42 @@ device& device::operator=(device&& other) noexcept
 
 std::size_t device::get_devices_count()
 {
-    cl_uint num_platforms = 0;
-    cl_int err = clGetPlatformIDs(0, nullptr, &num_platforms);
-    if (err != CL_SUCCESS || num_platforms == 0) {
+    auto _num_platforms = 0u;
+    auto _err = clGetPlatformIDs(0, nullptr, &_num_platforms);
+    if (_err != CL_SUCCESS || _num_platforms == 0) {
         throw std::runtime_error("Failed to find any OpenCL platforms.");
     }
-    return static_cast<std::size_t>(num_platforms);
+    return static_cast<std::size_t>(_num_platforms);
 }
 
 std::vector<device> device::get_all_devices()
 {
-    cl_uint num_platforms = 0;
-    cl_int err = clGetPlatformIDs(0, nullptr, &num_platforms);
-    if (err != CL_SUCCESS || num_platforms == 0) {
+    auto _num_platforms = 0u;
+    auto _err = clGetPlatformIDs(0, nullptr, &_num_platforms);
+    if (_err != CL_SUCCESS || _num_platforms == 0) {
         throw std::runtime_error("Failed to find any OpenCL platforms.");
     }
-
-    std::vector<cl_platform_id> platforms(num_platforms);
-    err = clGetPlatformIDs(num_platforms, platforms.data(), nullptr);
-    if (err != CL_SUCCESS) {
+    auto _platforms = std::vector<cl_platform_id>(_num_platforms);
+    _err = clGetPlatformIDs(_num_platforms, _platforms.data(), nullptr);
+    if (_err != CL_SUCCESS) {
         throw std::runtime_error("Failed to get OpenCL platform IDs.");
     }
-
-    std::vector<device> devices;
-
-    for (const auto& platform : platforms) {
-        cl_uint num_devices = 0;
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 0, nullptr, &num_devices);
-        if (err != CL_SUCCESS || num_devices == 0) {
-            continue; // Skip platforms with no available devices
-        }
-
-        std::vector<cl_device_id> devs(num_devices);
-        err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, num_devices, devs.data(), nullptr);
-        if (err != CL_SUCCESS) {
+    auto devices = std::vector<device> {};
+    for (const auto& platform : _platforms) {
+        auto _num_devices = 0u;
+        _err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 0, nullptr, &_num_devices);
+        if (_err != CL_SUCCESS || _num_devices == 0) {
             continue;
         }
-
-        for (const auto& dev : devs) {
+        auto _devs = std::vector<cl_device_id>(_num_devices);
+        _err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, _num_devices, _devs.data(), nullptr);
+        if (_err != CL_SUCCESS) {
+            continue;
+        }
+        for (const auto& dev : _devs) {
             devices.emplace_back(platform, dev);
         }
     }
-
     return devices;
 }
 
@@ -91,20 +85,17 @@ std::string device::get_name() const
     if (!_device) {
         throw std::runtime_error("Invalid OpenCL device.");
     }
-
-    size_t size = 0;
-    cl_int err = clGetDeviceInfo(_device, CL_DEVICE_NAME, 0, nullptr, &size);
-    if (err != CL_SUCCESS) {
+    auto _size = static_cast<std::size_t>(0u);
+    auto _err = clGetDeviceInfo(_device, CL_DEVICE_NAME, 0, nullptr, &_size);
+    if (_err != CL_SUCCESS) {
         throw std::runtime_error("Failed to get OpenCL device name size.");
     }
-
-    std::vector<char> name(size);
-    err = clGetDeviceInfo(_device, CL_DEVICE_NAME, size, name.data(), nullptr);
-    if (err != CL_SUCCESS) {
+    auto _name = std::vector<char>(_size);
+    _err = clGetDeviceInfo(_device, CL_DEVICE_NAME, _size, _name.data(), nullptr);
+    if (_err != CL_SUCCESS) {
         throw std::runtime_error("Failed to get OpenCL device name.");
     }
-
-    return std::string(name.data());
+    return std::string(_name.data());
 }
 
 }

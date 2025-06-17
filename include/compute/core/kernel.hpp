@@ -21,23 +21,19 @@ struct kernel {
     /// @param code
     kernel(const context& ctx, const std::string& str, const std::string& name);
 
+    /// @brief 
+    /// @tparam value_t 
+    /// @param idx 
+    /// @param buf 
     template <typename value_t>
-    void set_arg(const std::size_t idx, buffer<value_t>& buf)
-    {
-        cl_int err = clSetKernelArg(_kernel, static_cast<cl_uint>(idx), sizeof(cl_mem), &(buf._mem));
-        if (err != CL_SUCCESS) {
-            throw std::runtime_error("Failed to set buffer kernel argument at index " + std::to_string(idx));
-        }
-    }
+    void set_arg(const std::size_t idx, buffer<value_t>& buf);
 
+    /// @brief 
+    /// @tparam value_t 
+    /// @param idx 
+    /// @param buf 
     template <typename value_t>
-    void set_arg(const std::size_t idx, array_buffer<value_t>& buf)
-    {
-        cl_int err = clSetKernelArg(_kernel, static_cast<cl_uint>(idx), sizeof(cl_mem), &(buf._mem));
-        if (err != CL_SUCCESS) {
-            throw std::runtime_error("Failed to set array_buffer kernel argument at index " + std::to_string(idx));
-        }
-    }
+    void set_arg(const std::size_t idx, array_buffer<value_t>& buf);
 
     /// @brief
     void run(const std::vector<std::size_t>& wsz);
@@ -51,3 +47,5 @@ private:
 };
 
 }
+
+#include "kernel.inl"
