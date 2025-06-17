@@ -3,8 +3,8 @@
 #include <iostream>
 #include <sstream>
 
-#include <cereal/external/rapidjson/document.h>
-#include <cereal/external/rapidjson/istreamwrapper.h>
+#include <rapidjson/document.h>
+#include <rapidjson/istreamwrapper.h>
 
 std::string generate_host_code(const std::string& name, const rapidjson::Value& fields)
 {
