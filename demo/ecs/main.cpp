@@ -1,4 +1,5 @@
-#include <compute/compute.hpp>
+#include <compute/ecs/entity.hpp>
+#include <compute/ecs/registry.hpp>
 
 #include <iostream>
 

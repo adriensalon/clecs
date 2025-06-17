@@ -1,4 +1,7 @@
-#include <compute/compute.hpp>
+#include <compute/core/buffer.hpp>
+#include <compute/core/context.hpp>
+#include <compute/core/device.hpp>
+#include <compute/core/kernel.hpp>
 
 #include <iostream>
 
