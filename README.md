@@ -85,13 +85,6 @@ int main()
     print(_registry.get_component<position>(_entity).get());
     _registry.execute_system<speed, position>();
     print(_registry.get_component<position>(_entity).get());
-    _registry.execute_system<speed, position>();
-    print(_registry.get_component<position>(_entity).get());
-    _registry.execute_system<speed, position>();
-    print(_registry.get_component<position>(_entity).get());
-    _registry.execute_system<speed, position>();
-    print(_registry.get_component<position>(_entity).get());
-
 
     return 0;
 }
