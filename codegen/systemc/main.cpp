@@ -8,30 +8,29 @@
 
 std::string load_file(const std::filesystem::path& path)
 {
-    std::ifstream _ifs(path);
+    auto _ifs = std::ifstream(path);
     if (!_ifs.is_open()) {
         throw std::runtime_error("Cannot open file: " + path.string());
     }
-    std::ostringstream _oss;
+    auto _oss = std::ostringstream {};
     _oss << _ifs.rdbuf();
     return _oss.str();
 }
 
 std::string resolve_includes(const std::string& source, const std::filesystem::path& include_base, std::unordered_set<std::string>& visited)
 {
-    std::istringstream _iss(source);
-    std::ostringstream _resolved;
-    std::string _line;
-    // std::regex _include_pattern(R"(^\s*#include\s+<([^>]+)>\s*$)");
-    std::regex _include_pattern(R"(^\s*#include\s+\"([^\"]+)\"\s*$)");
+    auto _iss = std::istringstream(source);
+    auto _resolved = std::ostringstream {};
+    auto _line = std::string {};
+    auto _include_pattern = std::regex(R"(^\s*#include\s+\"([^\"]+)\"\s*$)");
     while (std::getline(_iss, _line)) {
-        std::smatch _match;
+        auto _match = std::smatch {};
         if (std::regex_match(_line, _match, _include_pattern)) {
-            std::string _include_file = _match[1];
-            std::filesystem::path _full_path = include_base / _include_file;
+            auto _include_file = std::string(_match[1]);
+            auto _full_path = include_base / _include_file;
             if (visited.count(_full_path.string()) == 0) {
                 visited.insert(_full_path.string());
-                std::string _included_code = load_file(_full_path);
+                auto _included_code = load_file(_full_path);
                 _resolved << resolve_includes(_included_code, include_base, visited) << "\n";
             }
         } else {
@@ -43,7 +42,7 @@ std::string resolve_includes(const std::string& source, const std::filesystem::p
 
 void generate_kernel_struct(const std::string& kernel_name, const std::string& resolved_code, const std::filesystem::path& output_path)
 {
-    std::ofstream _ofs(output_path);
+    auto _ofs = std::ofstream(output_path);
     if (!_ofs.is_open()) {
         throw std::runtime_error("Failed to open output file: " + output_path.string());
     }
@@ -66,9 +65,9 @@ int main(int argc, char* argv[])
         std::cout << "Usage: " << argv[0] << " <kernel_input_dir> <include_base_dir> <output_dir>\n";
         return 1;
     }
-    std::filesystem::path _input_dir = argv[1];
-    std::filesystem::path _include_base = argv[2];
-    std::filesystem::path _output_dir = _include_base;
+    auto _input_dir = std::filesystem::path(argv[1]);
+    auto _include_base = std::filesystem::path(argv[2]);
+    auto _output_dir = _include_base;
     if (!std::filesystem::exists(_input_dir) || !std::filesystem::is_directory(_input_dir)) {
         std::cout << "Error: Input directory does not exist or is not a directory: " << _input_dir << "\n";
         return 1;
@@ -77,11 +76,11 @@ int main(int argc, char* argv[])
     for (const auto& _entry : std::filesystem::directory_iterator(_input_dir)) {
         if (_entry.path().extension() == ".cl") {
             try {
-                std::string _kernel_source = load_file(_entry.path());
-                std::unordered_set<std::string> _visited;
-                std::string _resolved = resolve_includes(_kernel_source, _include_base, _visited);
-                std::string _kernel_name = get_struct_name(_entry.path());
-                std::filesystem::path _output_file = _output_dir / (_kernel_name + ".hpp");
+                auto _kernel_source = load_file(_entry.path());
+                auto _visited = std::unordered_set<std::string> {};
+                auto _resolved = resolve_includes(_kernel_source, _include_base, _visited);
+                auto _kernel_name = get_struct_name(_entry.path());
+                auto _output_file = _output_dir / (_kernel_name + ".hpp");
                 generate_kernel_struct(_kernel_name, _resolved, _output_file);
                 std::cout << "Generated system: " << _output_file << "\n";
             } catch (const std::exception& ex) {

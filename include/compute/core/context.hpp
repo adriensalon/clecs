@@ -4,7 +4,11 @@
 
 namespace compute {
 
-/// @brief
+/// @brief Represents an OpenCL execution context bound to a specific device.
+/// The `context` is responsible for managing the OpenCL context and associated command queue
+/// used for executing kernels and managing memory buffers. It is tightly coupled with a specific
+/// OpenCL device. Contexts are non-copyable but movable. They manage ownership of the underlying
+/// OpenCL context and command queue, and clean them up automatically on destruction.
 struct context {
 
     context(const context& other) = delete;
@@ -13,8 +17,11 @@ struct context {
     context& operator=(context&& other) noexcept;
     ~context();
 
-    /// @brief
-    /// @param device
+    /// @brief Constructs a new context bound to a given compute device.
+    /// This sets up the OpenCL context and command queue that ECS systems will use
+    /// to interact with device memory and launch compute kernels.
+    /// @param dev The `device` instance this context will be associated with.
+    /// @param props Optional additional OpenCL context properties (can be empty).
     context(const device& dev, const std::vector<cl_context_properties>& props = {});
 
 private:

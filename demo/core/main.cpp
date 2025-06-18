@@ -22,12 +22,12 @@ void print(const std::vector<float>& vec)
 
 int main()
 {
-    compute::device _dev = compute::device::get_device(0);
-    compute::context _ctx(_dev);
+    auto _dev = compute::device::get_device(0);
+    auto _ctx = compute::context(_dev);
     std::cout << "device name : " << _dev.get_name() << std::endl;
 
-    compute::array_buffer<float> _abuf(_ctx, 9);
-    compute::array_buffer<float> _bbuf(_ctx, 9);
+    auto _abuf = compute::array_buffer<float>(_ctx, 9);
+    auto _bbuf = compute::array_buffer<float>(_ctx, 9);
     _abuf.set(std::vector<float>(9, 0.22f));
     _bbuf.set(std::vector<float>(9, 0.44f));
     print(_abuf.fetch().get());
@@ -35,7 +35,7 @@ int main()
     print(_bbuf.fetch().get());
     std::cout << "=" << std::endl;
 
-    compute::kernel _krn(_ctx, add_kernel, "addition");
+    auto _krn = compute::kernel(_ctx, add_kernel, "addition");
     _krn.set_arg<float>(0, _abuf);
     _krn.set_arg<float>(1, _bbuf);
     _krn.run({ 9 });

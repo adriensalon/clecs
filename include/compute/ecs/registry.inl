@@ -36,7 +36,7 @@ std::future<component_t> registry::get_component(entity e)
 template <typename system_t, typename... components_t>
 void registry::execute_system()
 {
-    auto _krn = compute::kernel(_context, system_t::kernel_source, "system_main");
+    auto _krn = compute::kernel(_context, system_t::kernel_source, "smain");
     auto _entity_count = _next_entity;
     auto _idx = 0;
     (_krn.set_arg(_idx++, *_get_or_create_component_store<components_t>()), ...);

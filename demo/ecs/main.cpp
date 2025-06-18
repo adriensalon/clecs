@@ -5,7 +5,6 @@
 
 // generated dir is in included dirs
 #include "position.hpp"
-#include "velocity.hpp"
 #include "speed.hpp"
 
 void print(const position& pos)
@@ -16,12 +15,12 @@ void print(const position& pos)
 
 int main()
 {
-    compute::device _device = compute::device::get_device(0);
-    compute::context _context(_device);
+    auto _device = compute::device::get_device(0);
+    auto _context = compute::context(_device);
     std::cout << "device name : " << _device.get_name() << std::endl;
 
-    compute::registry _registry(_context, 1024);
-    compute::entity _entity = _registry.create_entity();
+    auto _registry = compute::registry(_context, 1024);
+    auto _entity = _registry.create_entity();
     _registry.add_component<position>(_entity, position{});
 
     print(_registry.get_component<position>(_entity).get());

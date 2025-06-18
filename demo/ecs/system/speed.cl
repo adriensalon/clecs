@@ -1,6 +1,6 @@
 #include "position.cl"
 
-kernel void system_main(__global position* positions)
+kernel void smain(__global position* positions)
 {
     int k = get_global_id(0);
     positions[k].x = 1.2f + positions[k].x;
