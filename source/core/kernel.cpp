@@ -79,16 +79,19 @@ kernel::~kernel()
     }
 }
 
-void kernel::run(const std::vector<std::size_t>& wsz)
+std::future<void> kernel::run(const std::vector<std::size_t>& wsz)
 {
-    auto _global_ws = wsz;
-    if (_global_ws.empty()) {
-        throw std::runtime_error("Work size cannot be empty.");
-    }
-    auto _err = clEnqueueNDRangeKernel(_command_queue, _kernel, static_cast<cl_uint>(_global_ws.size()), nullptr, _global_ws.data(), nullptr, 0, nullptr, nullptr);
-    if (_err != CL_SUCCESS) {
-        throw std::runtime_error("Failed to enqueue kernel.");
-    }
-    clFinish(_command_queue);
+    return std::async(std::launch::async, [this, wsz]() {
+        auto _global_ws = wsz;
+        if (_global_ws.empty()) {
+            throw std::runtime_error("Work size cannot be empty.");
+        }
+        auto _err = clEnqueueNDRangeKernel(_command_queue, _kernel, static_cast<cl_uint>(_global_ws.size()), nullptr, _global_ws.data(), nullptr, 0, nullptr, nullptr);
+        if (_err != CL_SUCCESS) {
+            throw std::runtime_error("Failed to enqueue kernel.");
+        }
+        clFinish(_command_queue);
+    });
 }
+
 }

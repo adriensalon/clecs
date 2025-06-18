@@ -50,7 +50,7 @@ struct kernel {
     /// global work dimensions. The kernel must be fully configured with all
     /// arguments set prior to execution.
     /// @param wsz Vector of global work sizes for each dimension (e.g., 1D, 2D, 3D).
-    void run(const std::vector<std::size_t>& wsz);
+    std::future<void> run(const std::vector<std::size_t>& wsz);
 
 private:
     cl_device_id _device;

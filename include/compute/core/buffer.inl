@@ -40,12 +40,14 @@ buffer<value_t>::buffer(const context& ctx, cl_mem_flags flags)
 }
 
 template <typename value_t>
-void buffer<value_t>::set(const value_t& val)
+std::future<void> buffer<value_t>::set(const value_t& val)
 {
-    auto _err = clEnqueueWriteBuffer(_queue, _mem, CL_TRUE, 0, sizeof(value_t), &val, 0, nullptr, nullptr);
-    if (_err != CL_SUCCESS) {
-        throw std::runtime_error("Failed to write to OpenCL buffer");
-    }
+    return std::async(std::launch::async, [this, val]() {
+        auto _err = clEnqueueWriteBuffer(_queue, _mem, CL_TRUE, 0, sizeof(value_t), &val, 0, nullptr, nullptr);
+        if (_err != CL_SUCCESS) {
+            throw std::runtime_error("Failed to write to OpenCL buffer");
+        }
+    });
 }
 
 template <typename value_t>
@@ -114,27 +116,31 @@ array_buffer<value_t>::array_buffer(const context& ctx, const std::size_t sz, cl
 }
 
 template <typename value_t>
-void array_buffer<value_t>::set(std::size_t idx, const value_t& val)
+std::future<void> array_buffer<value_t>::set(std::size_t idx, const value_t& val)
 {
-    if (idx >= _size) {
-        throw std::out_of_range("Index out of bounds");
-    }
-    auto _err = clEnqueueWriteBuffer(_queue, _mem, CL_TRUE, idx * sizeof(value_t), sizeof(value_t), &val, 0, nullptr, nullptr);
-    if (_err != CL_SUCCESS) {
-        throw std::runtime_error("Failed to write element to array buffer");
-    }
+    return std::async(std::launch::async, [this, idx, val]() {
+        if (idx >= _size) {
+            throw std::out_of_range("Index out of bounds");
+        }
+        auto _err = clEnqueueWriteBuffer(_queue, _mem, CL_TRUE, idx * sizeof(value_t), sizeof(value_t), &val, 0, nullptr, nullptr);
+        if (_err != CL_SUCCESS) {
+            throw std::runtime_error("Failed to write element to array buffer");
+        }
+    });
 }
 
 template <typename value_t>
-void array_buffer<value_t>::set(const std::vector<value_t>& vals)
+std::future<void> array_buffer<value_t>::set(const std::vector<value_t>& vals)
 {
-    if (vals.size() > _size) {
-        throw std::out_of_range("Input vector size exceeds buffer size");
-    }
-    auto _err = clEnqueueWriteBuffer(_queue, _mem, CL_TRUE, 0, vals.size() * sizeof(value_t), vals.data(), 0, nullptr, nullptr);
-    if (_err != CL_SUCCESS) {
-        throw std::runtime_error("Failed to write vector to array buffer");
-    }
+    return std::async(std::launch::async, [this, vals]() {
+        if (vals.size() > _size) {
+            throw std::out_of_range("Input vector size exceeds buffer size");
+        }
+        auto _err = clEnqueueWriteBuffer(_queue, _mem, CL_TRUE, 0, vals.size() * sizeof(value_t), vals.data(), 0, nullptr, nullptr);
+        if (_err != CL_SUCCESS) {
+            throw std::runtime_error("Failed to write vector to array buffer");
+        }
+    });
 }
 
 template <typename value_t>

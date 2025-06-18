@@ -28,7 +28,7 @@ struct buffer {
     /// @brief Sets the value on the device from host memory.
     /// This writes the specified value to device memory asynchronously.
     /// @param val The value to write to the buffer.
-    void set(const value_t& val); // -----------------------> go return std::future<void> async
+    std::future<void> set(const value_t& val);
 
     /// @brief Asynchronously fetches the value from device memory.
     /// Returns a future that will contain the host copy of the value once
@@ -68,14 +68,14 @@ struct array_buffer {
     /// Throws std::out_of_range exception if index is greater than the buffer size.
     /// @param idx Index of the element to update.
     /// @param val The new value to write at the given index.
-    void set(std::size_t idx, const value_t& val); // -----------------------> go return std::future<void> async
+    std::future<void> set(std::size_t idx, const value_t& val);
 
     /// @brief Sets multiple values in the device buffer from host memory.
     /// Replaces the beginning of the buffer with the provided values.
     /// If fewer values are provided than the buffer size, only those are updated.
     /// Throws std::out_of_range exception if more values are provided than the buffer size.
     /// @param vals A vector of values to copy into the buffer.
-    void set(const std::vector<value_t>& vals); // -----------------------> go return std::future<void> async
+    std::future<void> set(const std::vector<value_t>& vals);
 
     /// @brief Asynchronously fetches a single element from device memory.
     /// Throws std::out_of_range exception if index is greater than the buffer size.

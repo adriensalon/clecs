@@ -43,7 +43,7 @@ struct registry {
     /// @param e The target entity.
     /// @param value The value to assign to this entity’s component.
     template <typename component_t>
-    void add_component(entity e, const component_t& value);
+    std::future<void> add_component(entity e, const component_t& value);
 
     /// @brief Asynchronously retrieves a component's value from the device.
     /// This performs a non-blocking read of the component associated with an entity,
@@ -59,9 +59,7 @@ struct registry {
     /// dispatches a compute kernel generated from the user-defined `system_t`.
     /// The kernel will be launched with global work size equal to entity capacity.
     template <typename system_t, typename... components_t>
-    void execute_system();
-
-    // serialize to & from binary std::string with cereal ?
+    std::future<void> execute_system();
 
 private:
     const context& _context;
