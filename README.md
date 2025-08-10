@@ -1,4 +1,4 @@
-# cl_ecs
+# clecs
 
 A proof of concept for a device-resident ECS framework using OpenCL, C++17 and CMake. Components live directly in device memory, and systems are executed as compute kernels. The host only fetches data via an async API.
 
